@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeremiah N &mdash; Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10; --bg2: #0d1117; --surface: #111820;
+    --accent: #00e5a0; --text: #e2eaf4; --muted: #5a7080;
+    --border: rgba(0,229,160,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; cursor: none; }
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; transition: width 0.2s, height 0.2s; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(0,229,160,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); }
+  body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 100; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(8,12,16,0.95), transparent); backdrop-filter: blur(4px); }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+  .nav-logo span { color: var(--muted); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 0 60px; position: relative; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); }
+  .hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+  .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,229,160,0.12) 0%, transparent 70%); top: -100px; right: 0; animation: float 8s ease-in-out infinite; }
+  .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,184,255,0.08) 0%, transparent 70%); bottom: 0; left: 100px; animation: float 10s ease-in-out infinite reverse; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+  .hero-tag::before { content: ''; display: block; width: 30px; height: 1px; background: var(--accent); }
+  .hero-name { font-size: clamp(56px, 8vw, 110px); font-weight: 800; line-height: 0.9; letter-spacing: -0.02em; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; }
+  .hero-name .first { display: block; color: var(--text); }
+  .hero-name .last { display: block; color: transparent; -webkit-text-stroke: 1px rgba(0,229,160,0.6); }
+  .hero-desc { font-size: 18px; color: var(--muted); max-width: 480px; line-height: 1.7; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.6s 0.6s forwards; }
+  .hero-ctas { display: flex; gap: 16px; opacity: 0; animation: fadeUp 0.6s 0.8s forwards; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: var(--accent); color: #080c10; font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); transition: background 0.2s, transform 0.2s; }
+  .btn-primary:hover { background: #00ffb3; transform: translateY(-2px); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border: 1px solid var(--border); color: var(--accent); font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; transition: border-color 0.2s, background 0.2s; }
+  .btn-secondary:hover { border-color: var(--accent); background: rgba(0,229,160,0.05); }
+  .typing-line { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--accent); margin-top: 24px; }
+  .typing-line::before { content: '$ '; opacity: 0.5; }
+  .typed-text { border-right: 2px solid var(--accent); animation: blink 0.8s infinite; padding-right: 2px; }
+  @keyframes blink { 0%, 100% { border-color: var(--accent); } 50% { border-color: transparent; } }
+  .hero-scroll { position: absolute; bottom: 40px; left: 60px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 12px; opacity: 0; animation: fadeUp 0.6s 1.2s forwards; }
+  .hero-scroll::after { content: ''; display: block; width: 60px; height: 1px; background: var(--muted); animation: scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0%, 100% { width: 60px; opacity: 0.4; } 50% { width: 100px; opacity: 1; } }
+
+  .status-badge { position: absolute; top: 50%; right: 60px; transform: translateY(-50%); border: 1px solid var(--border); background: rgba(13,17,23,0.8); padding: 20px 24px; backdrop-filter: blur(10px); opacity: 0; animation: fadeIn 0.8s 1s forwards; }
+  .status-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,229,160,0.4); } 50% { box-shadow: 0 0 0 6px rgba(0,229,160,0); } }
+  .status-text { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  .status-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 6px; display: block; }
+  .status-info { margin-top: 16px; }
+  .status-item { display: flex; justify-content: space-between; gap: 24px; font-family: 'Space Mono', monospace; font-size: 11px; padding: 6px 0; border-top: 1px solid var(--border); }
+  .status-item:first-child { border-top: none; }
+  .status-key { color: var(--muted); }
+  .status-val { color: var(--text); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  section { padding: 100px 60px; }
+  .section-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 1px; background: var(--accent); }
+  .section-title { font-size: clamp(36px, 4vw, 60px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin-bottom: 60px; }
+
+  #about { background: var(--bg); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .about-text p { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+  .about-highlight { border-left: 2px solid var(--accent); padding: 16px 24px; background: rgba(0,229,160,0.04); margin-top: 32px; font-size: 15px; color: var(--text); line-height: 1.7; font-style: italic; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .stat-card { background: var(--surface); padding: 32px 28px; border: 1px solid var(--border); transition: border-color 0.2s; }
+  .stat-card:hover { border-color: rgba(0,229,160,0.4); }
+  .stat-num { font-size: 40px; font-weight: 800; color: var(--accent); line-height: 1; font-family: 'Space Mono', monospace; }
+  .stat-label { font-size: 13px; color: var(--muted); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  #skills { background: var(--bg2); }
+  .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+  .skill-card { background: var(--surface); padding: 40px; border: 1px solid var(--border); position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
+  .skill-card::before { content: attr(data-num); position: absolute; top: 20px; right: 24px; font-family: 'Space Mono', monospace; font-size: 48px; font-weight: 700; color: rgba(0,229,160,0.06); line-height: 1; pointer-events: none; }
+  .skill-card:hover { border-color: rgba(0,229,160,0.35); transform: translateY(-2px); }
+  .skill-icon { width: 44px; height: 44px; background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 20px; }
+  .skill-name { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .skill-items { list-style: none; }
+  .skill-items li { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; gap: 10px; line-height: 1.5; }
+  .skill-items li::before { content: '›'; color: var(--accent); flex-shrink: 0; }
+
+  #education { background: var(--bg); }
+  .edu-timeline { position: relative; }
+  .edu-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--accent), transparent); }
+  .edu-item { padding: 0 0 60px 48px; position: relative; }
+  .edu-item:last-child { padding-bottom: 0; }
+  .edu-item::before { content: ''; position: absolute; left: -5px; top: 8px; width: 10px; height: 10px; background: var(--accent); border: 2px solid var(--bg); border-radius: 50%; box-shadow: 0 0 12px var(--accent); }
+  .edu-year { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .edu-degree { font-size: 28px; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+  .edu-school { font-size: 15px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .edu-loc { font-size: 12px; color: var(--muted); opacity: 0.6; margin-top: 4px; font-family: 'Space Mono', monospace; }
+  .edu-badge { display: inline-block; margin-top: 10px; padding: 4px 12px; border: 1px solid rgba(0,229,160,0.3); font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  #learning { background: var(--bg2); }
+  .learning-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+  .learn-card { background: var(--surface); padding: 36px; border: 1px solid var(--border); transition: border-color 0.3s, transform 0.3s; }
+  .learn-card:hover { border-color: rgba(0,229,160,0.35); transform: translateY(-2px); }
+  .learn-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .learn-icon { font-size: 28px; }
+  .learn-title { font-size: 20px; font-weight: 700; }
+  .learn-desc { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .learn-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .learn-tag { padding: 4px 10px; border: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); }
+
+  #contact { background: var(--bg); border-top: 1px solid var(--border); }
+  .contact-inner { text-align: center; max-width: 600px; margin: 0 auto; }
+  .contact-inner .section-tag { justify-content: center; }
+  .contact-inner .section-tag::before { display: none; }
+  .contact-sub { font-size: 16px; color: var(--muted); margin-bottom: 48px; line-height: 1.7; }
+  .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .contact-link { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 12px; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
+  .contact-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  footer { padding: 24px 60px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px; }
+    .status-badge { display: none; }
+    section { padding: 60px 24px; }
+    .about-grid, .skills-grid, .learning-grid { grid-template-columns: 1fr; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="nav-logo">JN<span>.dev</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Background</a></li>
+    <li><a href="#learning">Learning</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Open to entry-level opportunities</div>
+    <h1 class="hero-name">
+      <span class="first">Jeremiah</span>
+      <span class="last">N.</span>
+    </h1>
+    <p class="hero-desc">Hamilton, NZ. Self-teaching computer science and cybersecurity. Motivated, reliable, and ready to contribute to a team.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">Get in touch</a>
+      <a href="#learning" class="btn-secondary">What I'm learning</a>
+    </div>
+    <div class="typing-line"><span class="typed-text" id="typedText"></span></div>
+  </div>
+  <div class="status-badge">
+    <div><span class="status-dot"></span><span class="status-text">Open to work</span></div>
+    <span class="status-sub">Hamilton, New Zealand</span>
+    <div class="status-info">
+      <div class="status-item"><span class="status-key">Focus</span><span class="status-val">Cyber / CS</span></div>
+      <div class="status-item"><span class="status-key">Mode</span><span class="status-val">Self-teaching</span></div>
+      <div class="status-item"><span class="status-key">License</span><span class="status-val">Class 1 Learner</span></div>
+      <div class="status-item"><span class="status-key">Phone</span><span class="status-val">022 582 7193</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll to explore</div>
+</section>
+
+<section id="about">
+  <div class="section-tag reveal">001 &mdash; About</div>
+  <h2 class="section-title reveal">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm a <strong>self-motivated person</strong> from Hamilton, NZ with a genuine passion for technology. After completing NCEA Level 2 and partially completing a Certificate in IT at Wintec, I've taken ownership of my own learning &mdash; currently self-teaching computer science and cybersecurity.</p>
+      <p>I'm <strong>punctual, reliable, and a fast learner</strong>. I work well both on my own and as part of a team, and I always aim to do things properly. I'm now looking for an <strong>entry-level opportunity</strong> where I can contribute, grow, and develop real-world experience.</p>
+      <div class="about-highlight">"I stay motivated when facing challenges and try to learn from every mistake."</div>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-card"><div class="stat-num">CS</div><div class="stat-label">Self-teaching</div></div>
+      <div class="stat-card"><div class="stat-num">&#128274;</div><div class="stat-label">Cyber focus</div></div>
+      <div class="stat-card"><div class="stat-num">HLT</div><div class="stat-label">Hamilton, NZ</div></div>
+      <div class="stat-card"><div class="stat-num">&#8734;</div><div class="stat-label">Drive to learn</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-tag reveal">002 &mdash; Skills</div>
+  <h2 class="section-title reveal">What I Bring</h2>
+  <div class="skills-grid">
+    <div class="skill-card reveal" data-num="01">
+      <div class="skill-icon">&#129504;</div>
+      <div class="skill-name">Thinking Skills</div>
+      <ul class="skill-items">
+        <li>Think through situations before making decisions</li>
+        <li>Understand problems and look for practical solutions</li>
+        <li>Consider different options before choosing what to do</li>
+        <li>Ask for help when needed to ensure accuracy</li>
+      </ul>
+    </div>
+    <div class="skill-card reveal" data-num="02">
+      <div class="skill-icon">&#9881;</div>
+      <div class="skill-name">Self-Management</div>
+      <ul class="skill-items">
+        <li>Stay organised and complete tasks I am given</li>
+        <li>Take responsibility and aim to get things right first time</li>
+        <li>Manage my time well on independent projects</li>
+        <li>Follow instructions carefully and stay focused</li>
+      </ul>
+    </div>
+    <div class="skill-card reveal" data-num="03">
+      <div class="skill-icon">&#128225;</div>
+      <div class="skill-name">Willingness to Learn</div>
+      <ul class="skill-items">
+        <li>Actively self-teaching CS and cybersecurity every day</li>
+        <li>Stay motivated when facing new challenges</li>
+        <li>Ask questions when something is not understood</li>
+        <li>Enjoy exploring new technologies and concepts</li>
+      </ul>
+    </div>
+    <div class="skill-card reveal" data-num="04">
+      <div class="skill-icon">&#128269;</div>
+      <div class="skill-name">Problem Solving</div>
+      <ul class="skill-items">
+        <li>Stay calm and work through problems step by step</li>
+        <li>Understand root causes before attempting fixes</li>
+        <li>Look for simple, practical solutions</li>
+        <li>Stay focused until the problem is fully resolved</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="section-tag reveal">003 &mdash; Background</div>
+  <h2 class="section-title reveal">My Background</h2>
+  <div class="edu-timeline">
+    <div class="edu-item reveal">
+      <div class="edu-year">2025</div>
+      <div class="edu-degree">Certificate in Information Technology</div>
+      <div class="edu-school">Waikato Institute of Technology (Wintec)</div>
+      <div class="edu-loc">Hamilton, New Zealand</div>
+      <span class="edu-badge">Partially Completed</span>
+    </div>
+    <div class="edu-item reveal">
+      <div class="edu-year">2024</div>
+      <div class="edu-degree">NCEA Level 2</div>
+      <div class="edu-school">Hamilton Boys' High School</div>
+      <div class="edu-loc">Hamilton, New Zealand</div>
+      <span class="edu-badge">Completed</span>
+    </div>
+  </div>
+</section>
+
+<section id="learning">
+  <div class="section-tag reveal">004 &mdash; Currently Learning</div>
+  <h2 class="section-title reveal">Self-Teaching</h2>
+  <div class="learning-grid">
+    <div class="learn-card reveal">
+      <div class="learn-header">
+        <span class="learn-icon">&#128274;</span>
+        <div class="learn-title">Cybersecurity</div>
+      </div>
+      <p class="learn-desc">Independently studying cybersecurity fundamentals including networking, security concepts, threat analysis, and ethical hacking basics. Driven by a genuine interest in how systems are protected and exploited.</p>
+      <div class="learn-tags">
+        <span class="learn-tag">Networking</span>
+        <span class="learn-tag">Linux</span>
+        <span class="learn-tag">Security fundamentals</span>
+        <span class="learn-tag">Ethical hacking</span>
+      </div>
+    </div>
+    <div class="learn-card reveal">
+      <div class="learn-header">
+        <span class="learn-icon">&#128187;</span>
+        <div class="learn-title">Computer Science</div>
+      </div>
+      <p class="learn-desc">Self-teaching core CS concepts including programming, algorithms, and problem solving. Motivated by curiosity and a long-term goal of building a career in tech.</p>
+      <div class="learn-tags">
+        <span class="learn-tag">Programming</span>
+        <span class="learn-tag">Algorithms</span>
+        <span class="learn-tag">Game dev</span>
+        <span class="learn-tag">Problem solving</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag reveal">005 &mdash; Contact</div>
+    <h2 class="section-title reveal">Let's Talk</h2>
+    <p class="contact-sub reveal">I'm actively looking for entry-level work in tech. If you think there's a fit, reach out &mdash; I'd love to hear from you.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:jernga10@gmail.com" class="contact-link">
+        <span>&#9993;</span> jernga10@gmail.com
+      </a>
+      <a href="tel:+640225827193" class="contact-link">
+        <span>&#128222;</span> 022 582 7193
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&#169; 2026 Jeremiah N &mdash; Hamilton, New Zealand</p>
+  <p>Self-teaching CS &amp; Cybersecurity</p>
+</footer>
+
+<script>
+  var cursor = document.getElementById('cursor');
+  var ring = document.getElementById('cursorRing');
+  var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  var phrases = [
+    'self-teaching cybersecurity...',
+    'exploring computer science...',
+    'building with code...',
+    'open to opportunities...'
+  ];
+  var pi = 0, ci = 0, del = false;
+  var tel = document.getElementById('typedText');
+
+  function type() {
+    var cur = phrases[pi];
+    if (!del) {
+      ci++;
+      tel.textContent = cur.slice(0, ci);
+      if (ci === cur.length) {
+        del = true;
+        setTimeout(type, 1800);
+        return;
+      }
+    } else {
+      ci--;
+      tel.textContent = cur.slice(0, ci);
+      if (ci === 0) {
+        del = false;
+        pi = (pi + 1) % phrases.length;
+      }
+    }
+    setTimeout(type, del ? 50 : 90);
+  }
+  setTimeout(type, 1400);
+
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e, i) {
+      if (e.isIntersecting) {
+        setTimeout(function() { e.target.classList.add('visible'); }, i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+</body>
+</html>
